@@ -11,11 +11,13 @@ app.get('/', (req, res) => res.sendFile(`${__dirname}/chat-app.html`))
 
 io.on('connection', socket => {
   console.log('Someone connected! :D')
-  socket.emit('Hello')
 
-  socket.on('chat message', message => console.log(`Chat message: ${message}`))
+  socket.on('chat message', message => {
+    io.emit('chat message', message)
+    console.log(`Chat message: ${message}`)
+  })
 
-  socket.on('disconnect', () => console.log('Somebody left! D:'))
+  socket.on('disconnect', () => io.emit('chat message', `socket ${socket.id}: disconnected`))
 })
 
 http.listen(port, () => console.log('Listening on 4444'))
