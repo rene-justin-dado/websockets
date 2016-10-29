@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <input type="text" placeholder="Your message..." id="text">
+  <button>send</button>
+  <div id="log"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io('http://localhost:5000')
+    const text = document.getElementById('text')
+    const log = document.getElementById('log')
+
+    socket.onopen = event => {
+      console.log('Socket connected successfully.')
+    }
+
+    socket.on('message', evt => console.log(evt)/*log.innerHTML += `${evt.data}<br>`*/)
+
+    document.querySelector('button').onclick = () => {
+      socket.send(text.value)
+    }
+
+    document.onkeydown = (evt) => {
+      if (evt.keycode === 13 && text.hasFocus) {
+        socket.send(text.value)
+      }
+    }
+
+
+    text.focus()
+  </script>
+
+
+</body>
+</html>
